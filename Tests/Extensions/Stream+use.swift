@@ -13,7 +13,7 @@
 // FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND TITLE.
 //
 
-import CXoneGuideUtility
+@testable import CXoneGuideUtility
 import Foundation
 import Testing
 
@@ -58,7 +58,6 @@ private class MockInputStream: InputStream {
         #expect(expect === stream)
         #expect(stream.isOpen)
     }
-    expect.close()
     
     #expect(expect.opens == 1)
     #expect(expect.closes == 1)
@@ -74,7 +73,6 @@ private class MockInputStream: InputStream {
         #expect(expect === stream)
         #expect(stream.isOpen)
     }
-    expect.close()
     
     #expect(expect.opens == 1)
     #expect(expect.closes == 1)

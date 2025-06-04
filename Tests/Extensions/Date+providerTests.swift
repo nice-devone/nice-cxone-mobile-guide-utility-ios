@@ -13,7 +13,7 @@
 // FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND TITLE.
 //
 
-import CXoneGuideUtility
+@testable import CXoneGuideUtility
 import Foundation
 import Testing
 
