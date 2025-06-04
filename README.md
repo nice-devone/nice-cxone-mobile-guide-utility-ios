@@ -1,11 +1,20 @@
-# CXoneGuideUtility Documentation
+# CXoneGuideUtility
 
 ## Overview
 CXoneGuideUtility is a robust logging framework designed for iOS applications, providing flexible and powerful logging capabilities through a clean, type-safe interface.
 
+
 ## Requirements
 - iOS 15.0+
 - Swift 5+
+
+
+## Modules
+
+- Utility
+- [Core](https://github.com/nice-devone/nice-cxone-mobile-guide-utility-ios/tree/develop/cxone-chat-sdk)
+- [UI](https://github.com/nice-devone/nice-cxone-mobile-guide-utility-ios/tree/develop/cxone-chat-ui)
+- [Sample](https://github.com/nice-devone/nice-cxone-mobile-guide-utility-ios/tree/develop/sample)
 
 ## Core Architecture
 
