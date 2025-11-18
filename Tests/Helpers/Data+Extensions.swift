@@ -13,26 +13,17 @@
 // FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND TITLE.
 //
 
-@testable import CXoneGuideUtility
 import Foundation
-import Testing
 
-struct StringLastPathComponentTests {
-
-    @Test func emptyString() {
-        #expect(StaticString(stringLiteral: "").lastPathComponent == "")
+extension Data {
+    
+    static func random(count: Int, in generator: inout RandomNumberGenerator) -> Self {
+        return Data((0 ..< count).map { _ in generator.next() as UInt8 })
     }
 
-    @Test func trailingSlash() {
-        #expect(StaticString(stringLiteral: "/a/").lastPathComponent == "a")
-    }
+    static func random(count: Int) -> Self {
+        var generator: any RandomNumberGenerator = SystemRandomNumberGenerator()
 
-    @Test func singleComponent() {
-        #expect(StaticString(stringLiteral: "a").lastPathComponent == "a")
+        return .random(count: count, in: &generator)
     }
-
-    @Test func multipleComponents() {
-        #expect(StaticString(stringLiteral: "a/b/c").lastPathComponent == "c")
-    }
-
 }

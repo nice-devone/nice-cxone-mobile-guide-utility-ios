@@ -34,25 +34,40 @@ public struct LogFormatter {
     }
 
     /// Format log messages with just the level, category, and message
+    ///
+    /// ## Example
+    /// ```json
+    /// TRACE [CORE]: Foo
+    /// ```
     nonisolated(unsafe) public static let simple = Self { record in
-        let category = record.category.map { "[\($0)]: " } ?? ""
+        let category = record.category.map { "[\($0)]" } ?? ""
 
-        return "\(record.level): \(category)\(record.message)"
+        return "\(record.level) \(category): \(record.message)"
     }
 
     /// Format log messages with level, category, message, and function name
+    ///
+    /// ## Example
+    /// ```
+    /// HH:mm:ss:SSS dd.MM.yyyy TRACE [CORE]: Foo
+    /// ```
     nonisolated(unsafe) public static let medium = Self { record in
-        let category = record.category.map { "[\($0)]: " } ?? ""
+        let category = record.category.map { "[\($0)]" } ?? ""
 
-        return "\(timeStamp) \(record.level): \(category)\(record.message)"
+        return "\(timeStamp) \(record.level) \(category): \(record.message)"
     }
 
     /// Format log messages with level, category, message, function name, and file location
+    ///
+    /// ## Example
+    /// ```
+    /// HH:mm:ss:SSS dd.MM.yyyy TRACE [CORE] Manager:1: Foo
+    /// ```
     nonisolated(unsafe) public static let full = Self { record in
-        let category = record.category.map { "[\($0)]: " } ?? ""
+        let category = record.category.map { "[\($0)]" } ?? ""
         let location = "\(record.file.lastPathComponent):\(record.line)"
 
-        return "\(timeStamp) \(record.level): \(category)\(location): \(record.message)"
+        return "\(timeStamp) \(record.level) \(category) \(location): \(record.message)"
     }
 
     let formatter: (_ record: LogRecord) -> String
