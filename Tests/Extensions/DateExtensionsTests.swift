@@ -13,16 +13,20 @@
 // FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND TITLE.
 //
 
+@testable import CXoneGuideUtility
 import Foundation
+import Testing
 
-extension Data {
-    static func random(count: Int, in generator: inout RandomNumberGenerator) -> Self {
-        return Data((0 ..< count).map { _ in generator.next() as UInt8 })
+@Suite
+struct DateExtensionsTests {
+ 
+    @Test
+    func verifyDateProvider() {
+        let now = Date(timeIntervalSinceNow: -100)
+
+        Date.provider = { now }
+
+        #expect(Date.provided == now)
     }
 
-    static func random(count: Int) -> Self {
-        var generator: any RandomNumberGenerator = SystemRandomNumberGenerator()
-
-        return .random(count: count, in: &generator)
-    }
 }

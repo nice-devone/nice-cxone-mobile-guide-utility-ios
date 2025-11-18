@@ -17,6 +17,47 @@
 import Foundation
 import Testing
 
+@Suite
+struct StreamInputOutputTests {
+
+    @Test
+    func outputStreamUseOpensAndCloses() throws {
+        let expect = MockOutputStream()
+        #expect(expect.opens == 0)
+        #expect(expect.closes == 0)
+
+        // `use` itself calls `open` and `close` on the stream.
+        try expect.use { stream in
+            #expect(expect === stream)
+            #expect(stream.isOpen)
+        }
+        
+        #expect(expect.opens == 1)
+        #expect(expect.closes == 1)
+        #expect(expect.isOpen == false)
+    }
+
+    @Test
+    func inputStreamUseOpensAndCloses() throws {
+        let expect = MockInputStream()
+        #expect(expect.opens == 0)
+        #expect(expect.closes == 0)
+
+        // `use` itself calls `open` and `close` on the stream.
+        try expect.use { stream in
+            #expect(expect === stream)
+            #expect(stream.isOpen)
+        }
+        
+        #expect(expect.opens == 1)
+        #expect(expect.closes == 1)
+        #expect(expect.isOpen == false)
+    }
+
+}
+
+// MARK: - MockOutputStream
+
 private class MockOutputStream: OutputStream {
     var opens = 0
     var closes = 0
@@ -33,6 +74,8 @@ private class MockOutputStream: OutputStream {
     }
 }
 
+// MARK: - MockInputStream
+
 private class MockInputStream: InputStream {
     var opens = 0
     var closes = 0
@@ -47,34 +90,4 @@ private class MockInputStream: InputStream {
         closes += 1
         isOpen = false
     }
-}
-
-@Test func outputStreamUseOpensAndCloses() throws {
-    let expect = MockOutputStream()
-    #expect(expect.opens == 0)
-    #expect(expect.closes == 0)
-
-    try expect.use { stream in
-        #expect(expect === stream)
-        #expect(stream.isOpen)
-    }
-    
-    #expect(expect.opens == 1)
-    #expect(expect.closes == 1)
-    #expect(expect.isOpen == false)
-}
-
-@Test func inputStreamUseOpensAndCloses() throws {
-    let expect = MockInputStream()
-    #expect(expect.opens == 0)
-    #expect(expect.closes == 0)
-
-    try expect.use { stream in
-        #expect(expect === stream)
-        #expect(stream.isOpen)
-    }
-    
-    #expect(expect.opens == 1)
-    #expect(expect.closes == 1)
-    #expect(expect.isOpen == false)
 }

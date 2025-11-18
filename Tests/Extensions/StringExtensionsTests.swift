@@ -17,10 +17,27 @@
 import Foundation
 import Testing
 
-@Test func testDateProvider() {
-    let now = Date(timeIntervalSinceNow: -100)
+@Suite
+struct StringExtensionsTests {
 
-    Date.provider = { now }
+    @Test
+    func emptyString() {
+        #expect(StaticString(stringLiteral: "").lastPathComponent == "")
+    }
 
-    #expect(Date.provided == now)
+    @Test
+    func trailingSlash() {
+        #expect(StaticString(stringLiteral: "/a/").lastPathComponent == "a")
+    }
+
+    @Test
+    func singleComponent() {
+        #expect(StaticString(stringLiteral: "a").lastPathComponent == "a")
+    }
+
+    @Test
+    func multipleComponents() {
+        #expect(StaticString(stringLiteral: "a/b/c").lastPathComponent == "c")
+    }
+
 }
