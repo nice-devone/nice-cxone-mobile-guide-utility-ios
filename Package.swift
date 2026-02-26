@@ -7,7 +7,7 @@ let package = Package(
     name: "CXoneGuideUtility",
     platforms: [
         .iOS(.v15),
-        .macOS(.v11)
+        .macOS(.v12)
     ],
     products: [
         .library(
