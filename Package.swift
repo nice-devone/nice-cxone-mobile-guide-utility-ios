@@ -28,7 +28,8 @@ let package = Package(
             swiftSettings: [
                 .define("MOCKING", .when(configuration: .debug))
             ],
-            plugins: []
+            plugins: [
+            ]
         ),
         .testTarget(
             name: "CXoneGuideUtilityTests",

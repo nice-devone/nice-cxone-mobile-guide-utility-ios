@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2021-2025. NICE Ltd. All rights reserved.
+// Copyright (c) 2021-2026. NICE Ltd. All rights reserved.
 //
 // Licensed under the NICE License;
 // you may not use this file except in compliance with the License.
@@ -8,7 +8,7 @@
 //    https://github.com/nice-devone/nice-cxone-mobile-guide-utility-ios/blob/main/LICENSE
 //
 // TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE CXONE MOBILE SDK IS PROVIDED ON
-// AN “AS IS” BASIS. NICE HEREBY DISCLAIMS ALL WARRANTIES AND CONDITIONS, EXPRESS
+// AN "AS IS" BASIS. NICE HEREBY DISCLAIMS ALL WARRANTIES AND CONDITIONS, EXPRESS
 // OR IMPLIED, INCLUDING (WITHOUT LIMITATION) WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND TITLE.
 //
@@ -21,6 +21,7 @@ import Foundation
 ///
 ///     let writer = FileLogWriter(url: URL).filter(level: .warning)
 public struct LogFilter: LogWriter {
+    /// A closure that takes a ``LogRecord`` and returns `true` if the record should be logged.
     public typealias Predicate = (LogRecord) -> Bool
 
     // MARK: - Properties
@@ -34,6 +35,8 @@ public struct LogFilter: LogWriter {
 
     // MARK: - Init
 
+    /// Log a record if it satisfies the filter predicate.
+    /// - Parameter record: The log record to evaluate and potentially forward to the underlying writer.
     public func log(record: LogRecord) {
         if predicate(record) {
             writer.log(record: record)
