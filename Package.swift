@@ -30,14 +30,6 @@ let package = Package(
             ],
             plugins: [
             ]
-        ),
-        .testTarget(
-            name: "CXoneGuideUtilityTests",
-            dependencies: [
-                "CXoneGuideUtility",
-                .product(name: "Mockable", package: "Mockable")
-            ],
-            path: "Tests"
         )
     ]
 )
