@@ -17,11 +17,12 @@ import Foundation
 
 /// Simplified access to logging functionality via a default ``LogWriter`` and category.
 ///
-/// Example usage:
+/// Conformers provide thread-safe storage for ``instance``. The simplest approach
+/// uses `nonisolated(unsafe)`, which is safe when the SDK manages all write access:
 ///
 ///     enum Log: StaticLogger {
-///         nonisolated(unsafe) static var instance: LogWriter = PrintLogWriter()
-///         nonisolated(unsafe) static let category: String? = nil
+///         nonisolated(unsafe) static var instance: (any LogWriter)? = PrintLogWriter()
+///         static let category: String? = nil
 ///     }
 ///
 /// Once that's done, messages can be logged via `instance` using simple static methods. If `category`

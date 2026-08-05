@@ -16,21 +16,31 @@
 import Foundation
 
 /// A function that formats log messages
-public struct LogFormatter {
+public struct LogFormatter: Sendable {
 
     // MARK: - Properties
 
-    /// Formatter instance used to format ``timeStamp``
-    private static let logDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss:SSS dd.MM.yyyy"
-
-        return formatter
-    }()
+    /// `Sendable` format style used to render ``timeStamp``.
+    ///
+    /// Renders timestamps using the pattern `"HH:mm:ss:SSS dd.MM.yyyy"` via
+    /// `Date.VerbatimFormatStyle`, which is thread-safe by design.
+    ///
+    /// Intentionally pins the Gregorian calendar instead of inheriting the user's
+    /// auto-updating calendar (as a default `DateFormatter` would). This keeps log
+    /// timestamps consistent across non-Gregorian locales (e.g. Buddhist, Japanese,
+    /// Hebrew) where the year component would otherwise differ, at the cost of no
+    /// longer being a strict drop-in replacement for the legacy `DateFormatter`
+    /// pattern's defaults.
+    private static let logDateStyle = Date.VerbatimFormatStyle(
+        // swiftlint:disable:next line_length
+        format: "\(hour: .twoDigits(clock: .twentyFourHour, hourCycle: .zeroBased)):\(minute: .twoDigits):\(second: .twoDigits):\(secondFraction: .fractional(3)) \(day: .twoDigits).\(month: .twoDigits).\(year: .padded(4))",
+        timeZone: .current,
+        calendar: Calendar(identifier: .gregorian)
+    )
 
     /// Generate an internally consistent time stamp
     private static var timeStamp: String {
-        logDateFormatter.string(from: Date.provided)
+        Date.provided.formatted(logDateStyle)
     }
 
     /// Format log messages with just the level, category, and message
@@ -39,7 +49,7 @@ public struct LogFormatter {
     /// ```json
     /// TRACE [CORE]: Foo
     /// ```
-    nonisolated(unsafe) public static let simple = Self { record in
+    public static let simple = Self { record in
         let category = record.category.map { "[\($0)]" } ?? ""
 
         return "\(record.level) \(category): \(record.message)"
@@ -51,7 +61,7 @@ public struct LogFormatter {
     /// ```
     /// HH:mm:ss:SSS dd.MM.yyyy TRACE [CORE]: Foo
     /// ```
-    nonisolated(unsafe) public static let medium = Self { record in
+    public static let medium = Self { record in
         let category = record.category.map { "[\($0)]" } ?? ""
 
         return "\(timeStamp) \(record.level) \(category): \(record.message)"
@@ -63,7 +73,7 @@ public struct LogFormatter {
     /// ```
     /// HH:mm:ss:SSS dd.MM.yyyy TRACE [CORE] Manager:1: Foo
     /// ```
-    nonisolated(unsafe) public static let full = Self { record in
+    public static let full = Self { record in
         let category = record.category.map { "[\($0)]" } ?? ""
         let location = "\(record.file.lastPathComponent):\(record.line)"
 
@@ -71,7 +81,15 @@ public struct LogFormatter {
     }
 
     /// Closure that takes a ``LogRecord`` and returns the formatted log string.
-    let formatter: (_ record: LogRecord) -> String
+    let formatter: @Sendable (_ record: LogRecord) -> String
+
+    // MARK: - Init
+
+    /// Create a formatter from a `@Sendable` closure.
+    /// - Parameter formatter: closure that transforms a ``LogRecord`` into a formatted string.
+    public init(formatter: @escaping @Sendable (_ record: LogRecord) -> String) {
+        self.formatter = formatter
+    }
 
     // MARK: - Methods
 

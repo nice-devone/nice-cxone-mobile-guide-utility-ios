@@ -22,6 +22,7 @@ public struct FileLogWriter: LogWriter {
 
     /// File path to write messages
     let path: URL
+    private let sink: FileLogSink
 
     // MARK: - Init
 
@@ -32,22 +33,47 @@ public struct FileLogWriter: LogWriter {
         assert(path.isFileURL)
 
         self.path = path
+        self.sink = FileLogSink(path: path)
     }
 
     // MARK: - Methods
 
     /// Implement ``LogWriter.log(record:)``
     ///
-    /// - Parameter record: message details to record``
+    /// - Parameter record: message details to record
     public func log(record: LogRecord) {
-        Task { @MainActor in
-            try? OutputStream(url: path, append: true)?.use { stream in
-                do {
-                    try stream.write(record.formatted).write("\n\r")
-                } catch {
-                    print("An error occured writing to url: \(path)")
-                }
+        let message = record.formatted
+
+        // Task.detached ensures the write runs on the cooperative thread pool
+        // regardless of the caller's actor context, keeping file I/O off the main actor.
+        Task.detached { [sink] in
+            await sink.write(message)
+        }
+    }
+}
+
+// MARK: - Private
+
+/// Serial actor that ensures file writes are never interleaved across concurrent `log` calls.
+private actor FileLogSink {
+
+    private let path: URL
+
+    init(path: URL) {
+        self.path = path
+    }
+
+    func write(_ message: String) {
+        guard let stream = OutputStream(url: path, append: true) else {
+            print("FileLogWriter: failed to open stream at \(path)")
+            return
+        }
+        do {
+            _ = try stream.use { stream in
+                try stream.write(message).write("\n")
             }
+        } catch {
+            print("An error occurred writing to url: \(path): \(error)")
         }
     }
 }

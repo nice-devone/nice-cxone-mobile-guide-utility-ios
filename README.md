@@ -5,8 +5,8 @@ CXoneGuideUtility is a robust logging framework designed for iOS applications, p
 
 
 ## Requirements
-- iOS 15.0+
-- Swift 5+
+- iOS 16.0+
+- Swift 5.10+
 
 
 ## Modules
@@ -87,7 +87,7 @@ logWriter.format(.full)
 
 ```swift
 enum Log: StaticLogger {
-    nonisolated(unsafe) static var instance: LogWriter = PrintLogWriter()
+    nonisolated(unsafe) static var instance: (any LogWriter)? = PrintLogWriter()
     static let category: String? = "Application"
 }
 ```
