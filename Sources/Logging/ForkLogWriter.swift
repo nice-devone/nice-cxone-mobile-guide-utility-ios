@@ -16,26 +16,26 @@
 import Foundation
 
 /// Log messages by logging them to each of the child ``LogWriter``s.
-public class ForkLogWriter: LogWriter {
+public final class ForkLogWriter: LogWriter {
 
     // MARK: - Properties
 
-    private let loggers: [any LogWriter]
+    private let writers: [any LogWriter]
 
     // MARK: - Init
 
     /// Create a new ProxyLogWriter to forward messages to a given list of ``LogWriter``
-    /// 
+    ///
     /// - Parameter loggers: vararg list of LogWriters to target
     public init(_ loggers: any LogWriter...) {
-        self.loggers = loggers
+        self.writers = loggers
     }
 
     /// Create a new ProxyLogWriter to forward messages to a given ``[LogWriter]``
     ///
     /// - Parameter loggers: vararg list of LogWriters to target
     public init(loggers: [any LogWriter]) {
-        self.loggers = loggers
+        self.writers = loggers
     }
 
     // MARK: - Methods
@@ -44,8 +44,8 @@ public class ForkLogWriter: LogWriter {
     ///
     /// - Parameter record: ``LogRecord`` to log
     public func log(record: LogRecord) {
-        loggers.forEach { logger in
-            logger.log(record: record)
+        writers.forEach { writer in
+            writer.log(record: record)
         }
     }
 }

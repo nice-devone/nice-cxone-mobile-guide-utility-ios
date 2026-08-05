@@ -17,7 +17,7 @@ import Foundation
 
 /// A record of the details to be logged. All details are maintained throughout the ``LogWriter`` chain to facilitate
 /// customized formatting, filtering, and other operations in a fully isolated manner.
-public struct LogRecord: Equatable {
+public struct LogRecord: Equatable, Sendable {
 
     // MARK: - Properties
 

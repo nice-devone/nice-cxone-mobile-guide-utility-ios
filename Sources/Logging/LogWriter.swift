@@ -18,8 +18,8 @@ import Mockable
 
 /// Write messages to a log.
 @Mockable
-public protocol LogWriter {
-    
+public protocol LogWriter: Sendable {
+
     /// Write a message to this log
     ///
     /// - Parameter record: ``LogRecord`` to log

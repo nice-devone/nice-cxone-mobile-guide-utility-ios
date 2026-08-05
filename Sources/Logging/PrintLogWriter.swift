@@ -20,11 +20,11 @@ public struct PrintLogWriter: LogWriter {
 
     // MARK: - Properties
 
-    private let print: (String) -> Void
+    private let print: @Sendable (String) -> Void
 
     // MARK: - Init
 
-    public init(print: @escaping (String) -> Void = { Swift.print($0) }) {
+    public init(print: @escaping @Sendable (String) -> Void = { Swift.print($0) }) {
         self.print = print
     }
 

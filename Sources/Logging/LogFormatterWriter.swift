@@ -20,14 +20,14 @@ public extension LogWriter {
     ///
     /// - Parameter formatter: ``LogFormatter`` to use formatting messages
     /// to the receiver.
-    func format(_ formatter: LogFormatter) -> LogWriter {
+    func format(_ formatter: LogFormatter) -> any LogWriter {
         LogFormatterWriter(writer: self, formatter: formatter)
     }
 
     /// Attach a formatting function to the receiving ``LogWriter``
     /// - Parameter formatter: function to use formatting messages
     /// to the receiver.
-    func format(_ formatter: @escaping (LogRecord) -> String) -> LogWriter {
+    func format(_ formatter: @escaping @Sendable (LogRecord) -> String) -> any LogWriter {
         format(LogFormatter(formatter: formatter))
     }
 }
@@ -40,7 +40,7 @@ private struct LogFormatterWriter: LogWriter {
     // MARK: - Properties
 
     /// Target ``LogWriter``
-    let writer: LogWriter
+    let writer: any LogWriter
     /// ``LogFormatter`` to use for message formatting
     let formatter: LogFormatter
 

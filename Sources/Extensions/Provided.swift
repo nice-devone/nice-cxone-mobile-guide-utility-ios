@@ -18,15 +18,15 @@ import Foundation
 /// Add-on protocol noting a class that can provide default values, primarily for testing.
 protocol Provided {
     /// Current function to provide the next instance of `Self`
-    nonisolated(unsafe) static var provider: () -> Self { get set }
+    static var provider: @Sendable () -> Self { get set }
 
     /// Return the current provided value
-    nonisolated(unsafe) static var provided: Self { get }
+    static var provided: Self { get }
 }
 
 extension Provided {
     /// Return the current provided value
-    nonisolated(unsafe) static var provided: Self {
+    static var provided: Self {
         provider()
     }
 }
@@ -35,8 +35,16 @@ extension Provided {
 ///
 /// Primarily useful for testing.
 extension Date: Provided {
+
+    private static let providerStorage = SafeAccessContainer<@Sendable () -> Date> { Date() }
+
     /// Current provider of Date. Defaults to `Date()`
-    nonisolated(unsafe) static var provider = {
-        Date()
+    static var provider: @Sendable () -> Date {
+        get { providerStorage.content }
+        set {
+            providerStorage.mutate { stored in
+                stored = newValue
+            }
+        }
     }
 }

@@ -22,7 +22,7 @@ import Foundation
 ///     let writer = FileLogWriter(url: URL).filter(level: .warning)
 public struct LogFilter: LogWriter {
     /// A closure that takes a ``LogRecord`` and returns `true` if the record should be logged.
-    public typealias Predicate = (LogRecord) -> Bool
+    public typealias Predicate = @Sendable (LogRecord) -> Bool
 
     // MARK: - Properties
 
@@ -31,7 +31,7 @@ public struct LogFilter: LogWriter {
     let predicate: Predicate
 
     /// underlying writer to use. Messages matching `predicate` will be output using `writer`
-    let writer: LogWriter
+    let writer: any LogWriter
 
     // MARK: - Init
 
@@ -47,18 +47,18 @@ public struct LogFilter: LogWriter {
 // MARK: - LogWriter+LogFilter
 
 public extension LogWriter {
-    
+
     /// Apply a filter to a ``LogWriter``. The receiver `LogWriter` will only log messages that match `predicate`
     /// - Parameter predicate: Predicate to match.
     func filter(
         _ predicate: @escaping LogFilter.Predicate
-    ) -> LogWriter {
+    ) -> any LogWriter {
         LogFilter(predicate: predicate, writer: self)
     }
 
     /// Apply a filter to a ``LogWriter``. The receiver `LogWriter` will only log messages with a level >= `level`
     /// - Parameter minLevel: Minimum `LogLevel` to log
-    func filter(level minLevel: LogLevel) -> LogWriter {
+    func filter(level minLevel: LogLevel) -> any LogWriter {
         filter { record in
             record.level >= minLevel
         }
@@ -66,7 +66,7 @@ public extension LogWriter {
 
     /// Apply a filter to a ``LogWriter`` based on only passing messages in a list of categories.
     /// - Parameter categories: list of categories to be logged
-    func filter(categories: String...) -> LogWriter {
+    func filter(categories: String...) -> any LogWriter {
         filter { record in
             record.category.map(categories.contains) ?? false
         }
