@@ -74,20 +74,4 @@ extension OutputStream {
 
         return try write(data)
     }
-
-    /// Write `Encodable` data to an `OutputStream`
-    /// 
-    /// - Parameters
-    ///     - value: Value to be written
-    ///     - encoder: `JSONEncoder` to be used for encoding. A default encoder is used if none is provided.
-    /// - Returns: receiver
-    /// - Throws: Can thrown any `Error` that `OutputStream.write` or `JSONEncoder.encode` can throw.
-    func write<T: Encodable>(
-        _ value: T,
-        encoder: JSONEncoder = JSONEncoder()
-    ) throws -> Self {
-        let data = try encoder.encode(value)
-        
-        return try write(data)
-    }
 }

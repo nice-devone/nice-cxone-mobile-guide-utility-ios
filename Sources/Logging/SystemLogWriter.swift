@@ -28,7 +28,7 @@ public struct SystemLogWriter: LogWriter {
 
     /// Create a ``LogWriter`` to log messages to a system logger.
     ///
-    /// - Parameter logger: target ``Logger`` for all messages.
+    /// - Parameter logger: target `Logger` for all messages.
     public init(logger: Logger = Logger()) {
         self.logger = logger
     }

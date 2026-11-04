@@ -40,7 +40,7 @@ public struct LogRecord: Equatable, Sendable {
     ///
     /// - Parameters:
     ///     - message: raw message to log
-    ///     - level ``LogLevel`` of message to log
+    ///     - level: ``LogLevel`` of message to log
     ///     - category: category of message to log
     ///     - file: originating file of log message
     ///     - line: originating line of log message

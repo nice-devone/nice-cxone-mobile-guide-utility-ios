@@ -2,6 +2,13 @@
 # [Unreleased]
 
 
+<a name="4.1.0"></a>
+# [4.1.0] - 2026-11-04
+
+## Changes
+- The `Mockable` dependency is now pinned to exactly `0.6.2`. Mockable `0.6.3` and later restrict `xctest-dynamic-overlay` to versions before `1.10.0`, which cannot be resolved alongside packages that depend on `swift-issue-reporting` (for example `swift-snapshot-testing` or `swift-custom-dump`) when building with Swift 6. Swift Package Manager reported this as duplicate `IssueReporting` targets. If your app depends on Mockable directly, use a version requirement that allows `0.6.2`.
+
+
 <a name="4.0.0"></a>
 # [4.0.0] - 2026-08-05
 
@@ -65,7 +72,8 @@
 - Release the module
 
 
-[Unreleased]: https://github.com/nice-devone/nice-cxone-mobile-guide-utility-ios/compare/4.0.0...HEAD
+[Unreleased]: https://github.com/nice-devone/nice-cxone-mobile-guide-utility-ios/compare/4.1.0...HEAD
+[4.1.0]: https://github.com/nice-devone/nice-cxone-mobile-guide-utility-ios/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/nice-devone/nice-cxone-mobile-guide-utility-ios/compare/3.3.1...4.0.0
 [3.3.1]: https://github.com/nice-devone/nice-cxone-mobile-guide-utility-ios/compare/3.3.0...3.3.1
 [3.3.0]: https://github.com/nice-devone/nice-cxone-mobile-guide-utility-ios/compare/3.2.0...3.3.0

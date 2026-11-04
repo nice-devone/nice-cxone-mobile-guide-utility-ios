@@ -26,7 +26,7 @@ public struct FileLogWriter: LogWriter {
 
     // MARK: - Init
 
-    /// Construct a new `FileLogWriter` to log to ``path``.
+    /// Construct a new `FileLogWriter` to log to `path`.
     ///
     /// - Parameter path: file path for logging
     public init(path: URL) {
@@ -38,7 +38,7 @@ public struct FileLogWriter: LogWriter {
 
     // MARK: - Methods
 
-    /// Implement ``LogWriter.log(record:)``
+    /// Implement ``LogWriter/log(record:)``
     ///
     /// - Parameter record: message details to record
     public func log(record: LogRecord) {

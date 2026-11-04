@@ -50,7 +50,7 @@ public struct LogFormatter: Sendable {
     /// TRACE [CORE]: Foo
     /// ```
     public static let simple = Self { record in
-        let category = record.category.map { "[\($0)]" } ?? ""
+        let category = categoryTag(for: record)
 
         return "\(record.level) \(category): \(record.message)"
     }
@@ -62,7 +62,7 @@ public struct LogFormatter: Sendable {
     /// HH:mm:ss:SSS dd.MM.yyyy TRACE [CORE]: Foo
     /// ```
     public static let medium = Self { record in
-        let category = record.category.map { "[\($0)]" } ?? ""
+        let category = categoryTag(for: record)
 
         return "\(timeStamp) \(record.level) \(category): \(record.message)"
     }
@@ -74,7 +74,7 @@ public struct LogFormatter: Sendable {
     /// HH:mm:ss:SSS dd.MM.yyyy TRACE [CORE] Manager:1: Foo
     /// ```
     public static let full = Self { record in
-        let category = record.category.map { "[\($0)]" } ?? ""
+        let category = categoryTag(for: record)
         let location = "\(record.file.lastPathComponent):\(record.line)"
 
         return "\(timeStamp) \(record.level) \(category) \(location): \(record.message)"
@@ -99,5 +99,17 @@ public struct LogFormatter: Sendable {
     /// - Returns: updated ``LogRecord`` to log
     func callAsFunction(record: LogRecord) -> LogRecord {
         record.copy(formatted: formatter(record))
+    }
+}
+
+// MARK: - Private
+
+private extension LogFormatter {
+
+    /// Bracketed category such as `[CORE]`, or an empty string when the record has no category.
+    static func categoryTag(for record: LogRecord) -> String {
+        record.category.map { category in
+            "[\(category)]"
+        } ?? ""
     }
 }
