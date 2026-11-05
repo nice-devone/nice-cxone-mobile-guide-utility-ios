@@ -24,16 +24,16 @@ public final class ForkLogWriter: LogWriter {
 
     // MARK: - Init
 
-    /// Create a new ProxyLogWriter to forward messages to a given list of ``LogWriter``
+    /// Create a new ForkLogWriter to forward messages to a given list of ``LogWriter``
     ///
     /// - Parameter loggers: vararg list of LogWriters to target
     public init(_ loggers: any LogWriter...) {
         self.writers = loggers
     }
 
-    /// Create a new ProxyLogWriter to forward messages to a given ``[LogWriter]``
+    /// Create a new ForkLogWriter to forward messages to a given array of ``LogWriter``
     ///
-    /// - Parameter loggers: vararg list of LogWriters to target
+    /// - Parameter loggers: array of LogWriters to target
     public init(loggers: [any LogWriter]) {
         self.writers = loggers
     }

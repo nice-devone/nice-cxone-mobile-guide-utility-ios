@@ -33,26 +33,26 @@ import Foundation
 /// To log to both a file and the print console:
 ///
 ///     Log.instance = ForkLogWriter(
-///         FileLogWriter("log"),
+///         FileLogWriter(path: logFileURL),
 ///         PrintLogWriter()
-///     ).filter(minLevel: .warning)
+///     ).filter(level: .warning)
 ///
-/// ``ForkLogWriter`` and ``LogWriter.filter`` can also be combined to log different categories of messages
+/// ``ForkLogWriter`` and ``LogWriter/filter(categories:)`` can also be combined to log different categories of messages
 /// using different loggers:
 ///
 ///     Log.instance = ForkLogWriter(
-///         FileLogWriter("log"),
+///         FileLogWriter(path: logFileURL),
 ///         SystemLogWriter().filter(categories: "CORE")
 ///     )
 ///
-/// The format of logged messages can be set with the ``LogWriter.format`` function:
+/// The format of logged messages can be set with the ``LogWriter/format(_:)-(LogFormatter)`` function:
 ///
 ///     Log.instance = SystemLogWriter().format(.simple)
 ///
 /// As with filter, different loggers can use different formats:
 ///
 ///     Log.instance = ForkLogWriter(
-///         FileLogWriter("log").format(.full),
+///         FileLogWriter(path: logFileURL).format(.full),
 ///         PrintLogWriter().format(.simple)
 ///     )
 ///
@@ -75,7 +75,6 @@ public extension StaticLogger {
     ///     - level: `LogLevel` for this message
     ///     - category: category with which to tag the message
     ///     - file: file where message was generated
-    ///     - fun: function where message was generated
     ///     - line: line where message was generated
     static func log(
         _ message: String,

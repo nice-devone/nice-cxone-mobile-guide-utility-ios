@@ -35,7 +35,6 @@ public extension LogWriter {
     ///     - level: `LogLevel` for this message
     ///     - category: category with which to tag the message
     ///     - file: file where message was generated
-    ///     - fun: function where message was generated
     ///     - line: line where message was generated
     func log(
         _ message: String,

@@ -6,7 +6,7 @@ CXoneGuideUtility is a robust logging framework designed for iOS applications, p
 
 ## Requirements
 - iOS 16.0+
-- Swift 5.10+
+- Swift 6.0+ (Xcode 16 or later)
 
 
 ## Modules
@@ -67,7 +67,7 @@ Control log output:
 
 ```swift
 // Level-based filtering
-logWriter.filter(minLevel: .warning)
+logWriter.filter(level: .warning)
 
 // Category-based filtering
 logWriter.filter(categories: "NETWORK")
@@ -94,15 +94,17 @@ enum Log: StaticLogger {
 
 ### Advanced Configuration
 
+Compose writers, formatters and filters, then assign the result to your logger's `instance`:
+
 ```swift
-Log.configure(
-    format: .full,
-    isPrintEnabled: true,
-    isWriteToFileEnabled: true,
-    isCrashlyticsEnabled: true,
-    isSystemEnabled: true
-)
+Log.instance = ForkLogWriter(
+    PrintLogWriter(),
+    FileLogWriter(path: fileURL),
+    SystemLogWriter()
+).format(.full)
 ```
+
+The sample app wraps this composition in its own `Log.configure(format:isPrintEnabled:isWriteToFileEnabled:isCrashlyticsEnabled:isSystemEnabled:)` helper (`sample/iOSSDKExample/Sources/Utilities/Log/Log.swift`); it is sample-app code, not part of CXoneGuideUtility.
 
 ## Usage Examples
 
@@ -117,7 +119,8 @@ Log.error("Error message")
 ### Category-based Logging
 
 ```swift
-Log.log("Network request started", category: "NETWORK")
+Log.info("Network request started", category: "NETWORK")
+Log.log("Network request started", level: .debug, category: "NETWORK")
 ```
 
 ### Multi-destination Logging
@@ -126,29 +129,26 @@ Log.log("Network request started", category: "NETWORK")
 Log.instance = ForkLogWriter(
     FileLogWriter(path: fileURL).format(.full),
     PrintLogWriter().format(.simple)
-).filter(minLevel: .warning)
+).filter(level: .warning)
 ```
 
 ## File Management
 
-### Log Sharing
-
-```swift
-let shareDialog = try Log.getLogShareDialog()
-```
-
-### Log Cleanup
-
-```swift
-try Log.removeLogs()
-```
+`FileLogWriter` appends to the file at the URL you pass; CXoneGuideUtility does not share or delete log files. Manage the file yourself — for example with `FileManager.default.removeItem(at: fileURL)` — or see the sample app's `Log.logFileUrl` and `Log.removeLogs()` helpers (sample-app code, not framework API).
 
 ## Integration Support
 
 ### SDK Integration
-The logger automatically integrates with:
-- CXoneChat
-- CXoneChatUI
+CXoneChat and CXoneChatUI log through their own writers. Both default to a `PrintLogWriter`, so they print to the console until you replace the writer — or set it to `nil` to turn their logging off, e.g. in release builds:
+
+```swift
+CXoneChat.logWriter = writer
+CXoneChatUI.LogManager.instance = writer
+
+// Or silence both
+CXoneChat.logWriter = nil
+CXoneChatUI.LogManager.instance = nil
+```
 
 ## Best Practices
 - Configure appropriate log levels for different environments
